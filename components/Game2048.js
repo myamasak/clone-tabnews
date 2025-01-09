@@ -153,6 +153,10 @@ function Game2048() {
   };
 
   useEffect(() => {
+    initializeBoard();
+  }, []); // Empty dependency array for initialization on mount
+  
+  useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
