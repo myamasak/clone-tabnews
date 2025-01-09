@@ -52,81 +52,98 @@ function Game2048() {
     }
     
     if (newBoard && JSON.stringify(newBoard) !== JSON.stringify(board)) {
-      addRandomTile(newBoard);
-      setBoard([...newBoard]);
+      const boardCopy = newBoard.map(row => [...row]);
+      addRandomTile(boardCopy);
+      setBoard(boardCopy);
     }
-  };
+};
 
   const moveLeft = () => {
     const newBoard = board.map(row => {
-      const filteredRow = row.filter(cell => cell !== 0);
-      for(let i = 0; i < filteredRow.length - 1; i++) {
-        if(filteredRow[i] === filteredRow[i + 1]) {
-          filteredRow[i] *= 2;
-          filteredRow[i + 1] = 0;
+      // First, remove all zeros and get numbers only
+      let numbers = row.filter(cell => cell !== 0);
+      
+      // Merge adjacent equal numbers
+      for (let i = 0; i < numbers.length - 1; i++) {
+        if (numbers[i] === numbers[i + 1]) {
+          numbers[i] *= 2;
+          numbers.splice(i + 1, 1);
         }
       }
-      const finalRow = filteredRow.filter(cell => cell !== 0);
-      while(finalRow.length < 4) {
-        finalRow.push(0);
+      
+      // Add zeros to the end to maintain grid size
+      while (numbers.length < 4) {
+        numbers.push(0);
       }
-      return finalRow;
+      
+      return numbers;
     });
     return newBoard;
   };
-
+  
   const moveRight = () => {
     const newBoard = board.map(row => {
-      const filteredRow = row.filter(cell => cell !== 0);
-      for(let i = filteredRow.length - 1; i > 0; i--) {
-        if(filteredRow[i] === filteredRow[i - 1]) {
-          filteredRow[i] *= 2;
-          filteredRow[i - 1] = 0;
+      // First, remove all zeros and get numbers only
+      let numbers = row.filter(cell => cell !== 0);
+      
+      // Merge adjacent equal numbers from right to left
+      for (let i = numbers.length - 1; i > 0; i--) {
+        if (numbers[i] === numbers[i - 1]) {
+          numbers[i] *= 2;
+          numbers.splice(i - 1, 1);
+          i--;
         }
       }
-      const finalRow = filteredRow.filter(cell => cell !== 0);
-      while(finalRow.length < 4) {
-        finalRow.unshift(0);
+      
+      // Add zeros to the start to maintain grid size
+      while (numbers.length < 4) {
+        numbers.unshift(0);
       }
-      return finalRow;
+      
+      return numbers;
     });
     return newBoard;
   };
-
+  
   const moveUp = () => {
     const transposed = transpose(board);
     const moved = transposed.map(row => {
-      const filteredRow = row.filter(cell => cell !== 0);
-      for(let i = 0; i < filteredRow.length - 1; i++) {
-        if(filteredRow[i] === filteredRow[i + 1]) {
-          filteredRow[i] *= 2;
-          filteredRow[i + 1] = 0;
+      let numbers = row.filter(cell => cell !== 0);
+      
+      for (let i = 0; i < numbers.length - 1; i++) {
+        if (numbers[i] === numbers[i + 1]) {
+          numbers[i] *= 2;
+          numbers.splice(i + 1, 1);
         }
       }
-      const finalRow = filteredRow.filter(cell => cell !== 0);
-      while(finalRow.length < 4) {
-        finalRow.push(0);
+      
+      while (numbers.length < 4) {
+        numbers.push(0);
       }
-      return finalRow;
+      
+      return numbers;
     });
     return transpose(moved);
   };
-
+  
   const moveDown = () => {
     const transposed = transpose(board);
     const moved = transposed.map(row => {
-      const filteredRow = row.filter(cell => cell !== 0);
-      for(let i = filteredRow.length - 1; i > 0; i--) {
-        if(filteredRow[i] === filteredRow[i - 1]) {
-          filteredRow[i] *= 2;
-          filteredRow[i - 1] = 0;
+      let numbers = row.filter(cell => cell !== 0);
+      
+      for (let i = numbers.length - 1; i > 0; i--) {
+        if (numbers[i] === numbers[i - 1]) {
+          numbers[i] *= 2;
+          numbers.splice(i - 1, 1);
+          i--;
         }
       }
-      const finalRow = filteredRow.filter(cell => cell !== 0);
-      while(finalRow.length < 4) {
-        finalRow.unshift(0);
+      
+      while (numbers.length < 4) {
+        numbers.unshift(0);
       }
-      return finalRow;
+      
+      return numbers;
     });
     return transpose(moved);
   };
@@ -136,12 +153,11 @@ function Game2048() {
   };
 
   useEffect(() => {
-    initializeBoard();
     window.addEventListener('keydown', handleKeyPress);
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
     };
-  }, []); // Empty dependency array
+}, [board]); // Add board to dependency array
 
   return (
     <div className={styles.gameContainer}>
