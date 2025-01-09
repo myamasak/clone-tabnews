@@ -1,5 +1,6 @@
 .gameContainer {
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
   margin: 0 auto;
   padding: 20px;
   touch-action: none;
@@ -12,6 +13,7 @@
 }
 
 .grid {
+  display: grid;
   background: #bbada0;
   border-radius: 6px;
   padding: 15px;
@@ -24,7 +26,7 @@
 .cell {
   /* Keep existing styles */
   font-family: 'Helvetica', sans-serif; /* Change to your preferred font */
-  font-size: 24px; /* Adjust size as needed */
+  /* font-size: 24px; Adjust size as needed */
   font-weight: bold; /* Optional: makes numbers bolder */  
   width: 80px;
   height: 80px;
@@ -34,6 +36,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* font-size: 24px; */
-  /* font-weight: bold; */
+  aspect-ratio: 1;
+  font-size: calc(16px + 2vmin);
+}
+
+@media (max-width: 480px) {
+  .gameContainer {
+    padding: 10px;
+  }
+  
+  .grid {
+    gap: 5px;
+    padding: 5px;
+  }
+  
+  .cell {
+    font-size: calc(14px + 2vmin);
+  }
 }
