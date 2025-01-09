@@ -1,9 +1,10 @@
+import Game2048 from '../components/Game2048';
 function Home() {
-    return (
-      <div>
-        <h1>Testando modificações</h1>
-      </div>
-    );
-  }
-  
-  export default Home;
+  return (
+    <div>
+      <Game2048 />
+    </div>
+  );
+}
+
+export default Home;
