@@ -9,6 +9,8 @@ function Game2048() {
     [0, 0, 0, 0]
   ]);
   const [score, setScore] = useState(0);
+  const [touchStart, setTouchStart] = useState({ x: 0, y: 0 });
+  const [touchEnd, setTouchEnd] = useState({ x: 0, y: 0 });
 
   const initializeBoard = () => {
     const newBoard = [...board];
@@ -159,7 +161,53 @@ function Game2048() {
     return matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex]));
   };
 
-
+  // Add these functions after the handleKeyPress function
+  const handleTouchStart = (event) => {
+    setTouchStart({
+      x: event.touches[0].clientX,
+      y: event.touches[0].clientY
+    });
+  };
+  
+  const handleTouchMove = (event) => {
+    setTouchEnd({
+      x: event.touches[0].clientX,
+      y: event.touches[0].clientY
+    });
+  };
+  
+  const handleTouchEnd = () => {
+    const diffX = touchStart.x - touchEnd.x;
+    const diffY = touchStart.y - touchEnd.y;
+    const minSwipeDistance = 50;
+  
+    let newBoard;
+    
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+      if (Math.abs(diffX) > minSwipeDistance) {
+        if (diffX > 0) {
+          newBoard = moveLeft();
+        } else {
+          newBoard = moveRight();
+        }
+      }
+    } else {
+      if (Math.abs(diffY) > minSwipeDistance) {
+        if (diffY > 0) {
+          newBoard = moveUp();
+        } else {
+          newBoard = moveDown();
+        }
+      }
+    }
+  
+    if (newBoard && JSON.stringify(newBoard) !== JSON.stringify(board)) {
+      const boardCopy = newBoard.map(row => [...row]);
+      addRandomTile(boardCopy);
+      setBoard(boardCopy);
+    }
+  };
+  
   // Add isGameOver function here
   const isGameOver = () => {
     // Check for any empty cells
@@ -193,7 +241,12 @@ function Game2048() {
 
 // Replace the return statement with this
 return (
-  <div className={styles.gameContainer}>
+  <div 
+  className={styles.gameContainer}
+  onTouchStart={handleTouchStart}
+  onTouchMove={handleTouchMove}
+  onTouchEnd={handleTouchEnd}
+>
     <div className={styles.scoreContainer}>
       <h2>Score: {score}</h2>
       {isGameOver() && (
