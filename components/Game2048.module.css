@@ -14,7 +14,7 @@
 
 .grid {
   display: grid;
-  background: #bbada0;
+  background: var(--grid-background);
   border-radius: 6px;
   padding: 15px;
 }
@@ -24,20 +24,23 @@
 }
 
 .cell {
-  /* Keep existing styles */
-  font-family: 'Helvetica', sans-serif; /* Change to your preferred font */
-  /* font-size: 24px; Adjust size as needed */
-  font-weight: bold; /* Optional: makes numbers bolder */  
+  font-family: 'Helvetica', sans-serif;
+  font-weight: bold;
   width: 80px;
   height: 80px;
   margin: 5px;
-  background: rgba(238, 228, 218, 0.35);
+  background: var(--cell-background);
   border-radius: 3px;
   display: flex;
   justify-content: center;
   align-items: center;
   aspect-ratio: 1;
   font-size: calc(16px + 2vmin);
+  color: var(--cell-text-color);
+}
+
+.scoreContainer {
+  color: var(--text-color);
 }
 
 @media (max-width: 480px) {
