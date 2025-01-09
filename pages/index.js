@@ -1,7 +1,7 @@
 function Home() {
     return (
       <div>
-        <h1>Testando minha página, hotreload</h1>
+        <h1>Testando modificações</h1>
       </div>
     );
   }
